@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login | My Spring App</title>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
+			color: #333;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 20px;
+		}
+
+		.header {
+			text-align: center;
+			color: white;
+			margin: 50px 0 40px;
+			text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+		}
+
+		.header h1 {
+			font-size: 3rem;
+			margin-bottom: 10px;
+		}
+
+		.header h2 {
+			font-size: 1.4rem;
+			font-weight: 400;
+			opacity: 0.95;
+		}
+
+		.login-box {
+			background: white;
+			border-radius: 16px;
+			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+			padding: 45px 40px;
+			width: 100%;
+			max-width: 420px;
+			transition: transform 0.25s ease;
+		}
+
+		.login-box:hover {
+			transform: translateY(-6px);
+		}
+
+		.login-box h2 {
+			color: #2c3e50;
+			margin-bottom: 32px;
+			font-size: 2rem;
+			text-align: center;
+		}
+
+		.form-group {
+			margin-bottom: 24px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			color: #34495e;
+			font-weight: 500;
+			font-size: 1rem;
+		}
+
+		input {
+			width: 100%;
+			padding: 14px 16px;
+			border: 1px solid #d1d8e0;
+			border-radius: 8px;
+			font-size: 1.05rem;
+			transition: border-color 0.2s, box-shadow 0.2s;
+		}
+
+		input:focus {
+			outline: none;
+			border-color: #5c7cfa;
+			box-shadow: 0 0 0 3px rgba(92, 124, 250, 0.18);
+		}
+
+		.btn {
+			width: 100%;
+			padding: 14px;
+			margin: 12px 0;
+			border: none;
+			border-radius: 8px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.25s;
+		}
+
+		.btn-primary {
+			background: #5c7cfa;
+			color: white;
+		}
+
+		.btn-primary:hover {
+			background: #4c6ef5;
+			transform: translateY(-2px);
+		}
+
+		.btn-guest {
+			background: #7f8c8d;
+			color: white;
+		}
+
+		.btn-guest:hover {
+			background: #95a5a6;
+			transform: translateY(-2px);
+		}
+
+		.message {
+			margin-top: 20px;
+			padding: 12px;
+			border-radius: 8px;
+			text-align: center;
+			font-size: 0.98rem;
+		}
+
+		.error {
+			background: #ffebee;
+			color: #c0392b;
+			border: 1px solid #e74c3c44;
+		}
+
+		.success {
+			background: #e8f5e9;
+			color: #27ae60;
+			border: 1px solid #27ae6044;
+		}
+
+		.register-link {
+			text-align: center;
+			margin-top: 24px;
+			font-size: 1.05rem;
+			color: #34495e;
+		}
+
+		.register-link a {
+			color: #5c7cfa;
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.register-link a:hover {
+			text-decoration: underline;
+			color: #4c6ef5;
+		}
+
+		@media (max-width: 480px) {
+			.login-box {
+				padding: 35px 25px;
+			}
+
+			.header h1 {
+				font-size: 2.4rem;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+	<div class="login-box">
+		<h2>Sign In</h2>
+
+		<div th:if="${error}" class="alert alert-danger">
+			<span th:text="${error}"></span>
+		</div>
+
+		<form action="/log-in" method="post">
+			<div class="form-group">
+				<label for="username">Email</label>
+				<input type="text" id="email" name="email" required placeholder="yourname@example.com" autofocus>
+			</div>
+
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" required placeholder="••••••••">
+			</div>
+
+			<button type="submit" class="btn btn-primary">Login</button>
+
+			<button type="submit" name="guest" value="true" formaction="/login-guest" class="btn btn-guest">
+				Continue as Guest
+			</button>
+		</form>
+
+		<div class="register-link">
+			Don't have an account? <a href="/register">Create one now</a>
+		</div>
+	</div>
+
+</body>
+
+</html>
