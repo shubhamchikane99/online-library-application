@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Guest Login</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f5f5f5;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.guest-login-container {
+			background-color: #fff;
+			padding: 40px 50px;
+			border-radius: 10px;
+			box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+			text-align: center;
+		}
+
+		h2 {
+			margin-bottom: 30px;
+			color: #333;
+		}
+
+		input[type="text"] {
+			width: 80%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			font-size: 16px;
+		}
+
+		button {
+			padding: 10px 25px;
+			background-color: #007BFF;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #0056b3;
+		}
+
+		p {
+			color: #555;
+			font-size: 14px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="guest-login-container">
+		<h2>Guest Login</h2>
+		<form action="/guest-login" method="post">
+
+			<input type="text" name="name" placeholder="Enter your name" required>
+			<br>
+			<button type="submit">Continue as Guest</button>
+		</form>
+		<p>You can browse books but cannot borrow them.</p>
+	</div>
+</body>
+
+</html>

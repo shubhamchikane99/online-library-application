@@ -197,11 +197,10 @@
 			</div>
 
 			<button type="submit" class="btn btn-primary">Login</button>
-
-			<button type="submit" name="guest" value="true" formaction="/login-guest" class="btn btn-guest">
-				Continue as Guest
-			</button>
 		</form>
+		<button type="button" onclick="window.location.href='/guest'" class="btn btn-guest">
+			Continue as Guest
+		</button>
 
 		<div class="register-link">
 			Don't have an account? <a href="/register">Create one now</a>

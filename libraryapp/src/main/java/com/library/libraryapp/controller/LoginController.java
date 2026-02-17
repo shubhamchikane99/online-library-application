@@ -10,6 +10,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.libraryapp.entity.User;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
 
@@ -52,10 +54,30 @@ public class LoginController {
 
 	// Welcome page after login
 	@GetMapping("/welcome")
-	@ResponseBody
 	public String welcomePage() {
 
 		return "welcome";
+	}
+
+	@GetMapping("/guest")
+	public String guestLoginPage() {
+
+		return "guestpage";
+	}
+
+	// Handle guest form submission
+	@PostMapping("/guest-login")
+	public String guestLogin(@RequestParam("name") String name, HttpSession session) {
+
+		User guest = new User();
+		guest.setName(name);
+		guest.setEmail("guest@library.com");
+		guest.setMembership("0");
+		// Save in session
+		session.setAttribute("currentUser", guest);
+
+		// Redirect to book list page
+		return "redirect:/books";
 	}
 
 }
