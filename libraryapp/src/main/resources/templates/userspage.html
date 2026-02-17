@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>All Users</title>
+
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f6f9;
+			padding: 30px;
+		}
+
+		h2 {
+			text-align: center;
+			color: #4e73df;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 20px;
+			background-color: white;
+		}
+
+		th,
+		td {
+			padding: 12px;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		th {
+			background-color: #4e73df;
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h2>All Users List</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Id </th>
+				<th>Username</th>
+				<th>Email</th>
+				<th>Join Date</th>
+				<th>Membership</th>
+				<th>Remaing Days</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr th:each="user,stat  : ${users}">
+				<td th:text="${stat.count}"></td>
+				<td th:text="${user.name}"></td>
+				<td th:text="${user.email}"></td>
+				<td th:text="${user.joinDate}"></td>
+				<td th:text="${user.membership}"></td>
+				<td th:text="${user.membership} - ${user.diff}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+
+</html>

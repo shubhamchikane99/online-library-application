@@ -5,10 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.libraryapp.entity.User;
+import com.library.libraryapp.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -33,18 +33,21 @@ public class LoginController {
 
 		User saveUser = userService.saveUser(user);
 
-		return "redirect:/registerpage";
+		return "redirect:/";
 	}
 
 	@PostMapping("/log-in")
 	public String check(@RequestParam("email") String email, @RequestParam("password") String password,
-			RedirectAttributes redirectAttributes) {
+			HttpSession session, RedirectAttributes redirectAttributes) {
 
 		User vaidUser = userService.getUserByEmailAndPassword(email, password);
 
 		if (vaidUser != null) {
 			// Login successful → redirect to welcome page
-			return "redirect:/welcome";
+
+			session.setAttribute("loggedInUser", vaidUser);
+
+			return "welcomepage";
 		} else {
 			// Login failed → show error on login page
 			redirectAttributes.addFlashAttribute("error", "Incorrect email or password!");
@@ -56,7 +59,7 @@ public class LoginController {
 	@GetMapping("/welcome")
 	public String welcomePage() {
 
-		return "welcome";
+		return "welcomepage";
 	}
 
 	@GetMapping("/guest")

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Assign Book To User</title>
+	<style>
+		body {
+			font-family: Arial;
+			background: #f4f6f9;
+			padding: 40px;
+		}
+
+		.container {
+			width: 800px;
+			margin: auto;
+		}
+
+		.card {
+			background: white;
+			padding: 20px;
+			border-radius: 8px;
+			margin-bottom: 30px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		h2 {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		select,
+		input,
+		button {
+			width: 100%;
+			padding: 10px;
+			margin: 10px 0;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+		}
+
+		button {
+			background: #4e73df;
+			color: white;
+			border: none;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #2e59d9;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			background: white;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		th {
+			background: #4e73df;
+			color: white;
+		}
+
+		.return-btn {
+			background: green;
+			color: white;
+			padding: 5px 10px;
+			border-radius: 4px;
+			text-decoration: none;
+		}
+
+		#message {
+			text-align: center;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<p id="message"></p>
+
+		<!-- Assign Section -->
+		<div class="card">
+			<h2>Assign Book To User</h2>
+
+			<form id="assignForm" action="/manage-books" method="post" onsubmit="return validateForm()">
+
+				<!-- Select User -->
+				<select id="userSelect" name="userId" required>
+					<option value="">Select User</option>
+					<option th:each="u : ${userList}" th:value="${u.id}" th:text="${u.name}"
+						th:data-membership-remaining="${u.diff}" th:data-membership-days="${u.membership}">
+					</option>
+				</select>
+
+				<!-- Select Book -->
+				<select id="bookSelect" name="bookId" required>
+					<option value="">Select Book</option>
+					<option th:each="b : ${bookList}" th:value="${b.id}" th:text="${b.name}"
+						th:data-status="${b.status}"></option>
+				</select>
+
+				<!-- Issue Date -->
+				<input type="date" id="issueDate" name="issueDate" required>
+
+				<!-- Expected Return Date -->
+				<input type="date" id="returnDate" name="returnDate" required>
+
+				<button type="submit">Assign Book</button>
+
+			</form>
+		</div>
+
+		<!-- Issued Books Table -->
+		<h2>Currently Issued Books</h2>
+
+		<table>
+			<thead>
+				<tr>
+					<th>User</th>
+					<th>Book</th>
+					<th>Issue Date</th>
+					<th>Status</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>Rahul</td>
+					<td>Java Programming</td>
+					<td>2026-02-17</td>
+					<td>Issued</td>
+					<td><a href="#" class="return-btn">Return</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<script>
+		function validateForm() {
+			let message = document.getElementById("message");
+			let today = new Date();
+			today.setHours(0, 0, 0, 0);
+
+			// Get selected user
+			let userSelect = document.getElementById("userSelect");
+			let selectedUserOption = userSelect.options[userSelect.selectedIndex];
+			let user = {
+				id: selectedUserOption.value,
+				name: selectedUserOption.text,
+				membershipDays: parseInt(selectedUserOption.dataset.membershipDays),
+				membershipRemaining: parseInt(selectedUserOption.dataset.membershipRemaining)
+			};
+
+			// Get selected book
+			let bookSelect = document.getElementById("bookSelect");
+			let selectedBookOption = bookSelect.options[bookSelect.selectedIndex];
+			let book = {
+				id: selectedBookOption.value,
+				name: selectedBookOption.text
+			};
+
+			// Dates
+			let issueDate = new Date(document.getElementById("issueDate").value);
+			let returnDate = new Date(document.getElementById("returnDate").value);
+
+			// Date validation
+			if (issueDate < today) {
+				message.innerHTML = "Issue date cannot be in the past!";
+				message.style.color = "red";
+				return false;
+			}
+			if (returnDate <= issueDate) {
+				message.innerHTML = "Return date must be after issue date!";
+				message.style.color = "red";
+				return false;
+			}
+
+			// Difference in days
+			let diffDays = Math.ceil((returnDate - issueDate) / (1000 * 60 * 60 * 24));
+
+			// Check membership remaining
+			if (diffDays > user.membershipRemaining) {
+				message.innerHTML = "Cannot issue book. User '" + user.name + "' has only " +
+					(user.membershipDays - user.membershipRemaining) + " day(s) of membership left, but you tried to issue for " +
+					diffDays + " day(s).";
+				message.style.color = "red";
+				return false;
+			}
+
+			// Success
+			message.innerHTML = "Book '" + book.name + "' assigned to '" + user.name + "' for " + diffDays + " day(s).";
+			message.style.color = "green";
+
+			return true; // allow form submit
+		}
+	</script>
+
+</body>
+
+</html>

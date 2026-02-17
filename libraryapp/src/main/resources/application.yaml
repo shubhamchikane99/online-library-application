@@ -10,3 +10,8 @@ spring:
 
   thymeleaf:
     cache: false
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Book Management</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: Arial;
+			background: #f4f6f9;
+			padding: 30px;
+		}
+
+		.container {
+			width: 900px;
+			margin: auto;
+		}
+
+		form {
+			width: 400px;
+			background: white;
+			padding: 20px;
+			border-radius: 8px;
+			float: left;
+		}
+
+		input,
+		select {
+			width: 100%;
+			padding: 10px;
+			margin: 10px 0;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			height: 40px;
+		}
+
+		button {
+			width: 100%;
+			background: #4e73df;
+			color: white;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #2e59d9;
+		}
+
+		table {
+			width: 450px;
+			background: white;
+			border-collapse: collapse;
+			float: right;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		th {
+			background: #4e73df;
+			color: white;
+		}
+
+		h2 {
+			text-align: center;
+		}
+
+		.clearfix::after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.table-container {
+			width: 450px;
+			height: 300px;
+			/* Fixed height */
+			overflow-y: auto;
+			/* Vertical scroll */
+			overflow-x: auto;
+			/* Horizontal scroll if needed */
+			background: white;
+			float: right;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		th {
+			background: #4e73df;
+			color: white;
+			position: sticky;
+			top: 0;
+			/* Header stays fixed */
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="container clearfix">
+
+		<!-- Add Book Form -->
+		<form action="/save-book" method="post">
+
+			<h3>Add Book</h3>
+
+			<input type="text" name="name" placeholder="Book Name" required />
+			<input type="text" name="author" placeholder="Author" required />
+			<input type="text" name="category" placeholder="Category" required />
+			<input type="number" name="price" placeholder="Price" required />
+
+			<select name="status">
+				<option value="1">Available</option>
+				<option value="0">Not Available</option>
+			</select>
+
+			<button type="submit">Save Book</button>
+
+		</form>
+
+		<!-- Book List Table -->
+		<div class="table-container">
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+						<th>Author</th>
+						<th>Price</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="book, stat : ${bookList}">
+						<td th:text="${stat.count}"></td>
+						<td th:text="${book.name}"></td>
+						<td th:text="${book.author}"></td>
+						<td th:text="${book.price}"></td>
+						<td th:text="${book.status == 1 ? 'Available' : 'Not Available'}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+</body>
+
+</html>
