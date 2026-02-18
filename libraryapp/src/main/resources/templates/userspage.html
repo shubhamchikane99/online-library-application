@@ -39,6 +39,11 @@
 		tr:nth-child(even) {
 			background-color: #f2f2f2;
 		}
+
+		.expired {
+			color: red;
+			font-weight: bold;
+		}
 	</style>
 </head>
 
@@ -65,7 +70,10 @@
 				<td th:text="${user.email}"></td>
 				<td th:text="${user.joinDate}"></td>
 				<td th:text="${user.membership}"></td>
-				<td th:text="${user.membership} - ${user.diff}"></td>
+				<td th:text="${user.dayRemaing < 0} ? 'Membership is expired' : ${user.dayRemaing} + ' Days Remaining'"
+					th:class="${user.dayRemaing < 0} ? 'expired' : ''">
+				</td>
+				</td>
 			</tr>
 		</tbody>
 	</table>

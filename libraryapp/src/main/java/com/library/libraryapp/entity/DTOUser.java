@@ -28,4 +28,7 @@ public class DTOUser {
 	@Column(name = "diff")
 	private int diff;
 
+	@Column(name = "day_remaing")
+	private int dayRemaing;
+
 }
