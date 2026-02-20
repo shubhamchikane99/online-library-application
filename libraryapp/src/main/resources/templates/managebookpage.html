@@ -91,30 +91,30 @@
 
 		<!-- Assign Section -->
 		<div class="card">
-			<h2>Assign Book To User</h2> 
+			<h2>Assign Book To User</h2>
 
-			<form id="assignForm" action="/manage-books" method="post" onsubmit="return validateForm()">
+			<form id="assignForm" action="/assign-book-to-user" method="post" onsubmit="return validateForm()">
 
 				<!-- Select User -->
-				<select id="userSelect" name="userId" required>
+				<select id="userId" name="userId" required>
 					<option value="">Select User</option>
 					<option th:each="u : ${userList}" th:value="${u.id}" th:text="${u.name}"
-						th:data-membership-remaining="${u.diff}" th:data-membership-days="${u.membership}">
+						th:data-membership-remaining="${u.dayRemaing}">
 					</option>
 				</select>
 
 				<!-- Select Book -->
-				<select id="bookSelect" name="bookId" required>
+				<select id="bookId" name="bookId" required>
 					<option value="">Select Book</option>
 					<option th:each="b : ${bookList}" th:value="${b.id}" th:text="${b.name}"
 						th:data-status="${b.status}"></option>
 				</select>
 
 				<!-- Issue Date -->
-				<input type="date" id="issueDate" name="issueDate" required>
+				<input type="date" id="fromIssueDate" name="fromIssueDate" required>
 
 				<!-- Expected Return Date -->
-				<input type="date" id="returnDate" name="returnDate" required>
+				<input type="date" id="toIssueDate" name="toIssueDate" required>
 
 				<button type="submit">Assign Book</button>
 
@@ -129,19 +129,40 @@
 				<tr>
 					<th>User</th>
 					<th>Book</th>
-					<th>Issue Date</th>
+					<th>From Issue Date</th>
+					<th>To Issue Date</th>
 					<th>Status</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 
 			<tbody>
-				<tr>
-					<td>Rahul</td>
-					<td>Java Programming</td>
-					<td>2026-02-17</td>
-					<td>Issued</td>
-					<td><a href="#" class="return-btn">Return</a></td>
+				<tr th:each="assign : ${assingBookList}">
+
+					<td th:text="${assign.userName}">User Name</td>
+
+					<td th:text="${assign.bookName}">Book Name</td>
+
+					<td th:text="${assign.fromIssueDate}">Issue Date</td>
+
+					<td th:text="${assign.toIssueDate}">Issue Date</td>
+
+					<td>
+						<span th:if="${assign.status == 0}" style="color:orange;">Issued</span>
+						<span th:if="${assign.status == 1}" style="color:green;">Returned</span>
+					</td>
+
+					<td>
+						<a th:if="${assign.status == 0}" th:href="@{/return-book/{id}(id=${assign.id})}"
+							class="return-btn">
+							Return
+						</a>
+
+						<span th:if="${assign.status == 1}" style="color:gray;">
+							Completed
+						</span>
+					</td>
+
 				</tr>
 			</tbody>
 		</table>
@@ -150,31 +171,42 @@
 
 	<script>
 		function validateForm() {
+
 			let message = document.getElementById("message");
+			message.innerHTML = "";
+
 			let today = new Date();
 			today.setHours(0, 0, 0, 0);
 
-			// Get selected user
-			let userSelect = document.getElementById("userSelect");
+			// ✅ Correct User Select ID
+			let userSelect = document.getElementById("userId");
 			let selectedUserOption = userSelect.options[userSelect.selectedIndex];
+
 			let user = {
 				id: selectedUserOption.value,
 				name: selectedUserOption.text,
-				membershipDays: parseInt(selectedUserOption.dataset.membershipDays),
-				membershipRemaining: parseInt(selectedUserOption.dataset.membershipRemaining)
+				membershipRemaining: parseInt(selectedUserOption.dataset.membershipRemaining || 0)
 			};
 
-			// Get selected book
-			let bookSelect = document.getElementById("bookSelect");
+			// ✅ Correct Book Select ID
+			let bookSelect = document.getElementById("bookId");
 			let selectedBookOption = bookSelect.options[bookSelect.selectedIndex];
+
 			let book = {
 				id: selectedBookOption.value,
 				name: selectedBookOption.text
 			};
 
-			// Dates
-			let issueDate = new Date(document.getElementById("issueDate").value);
-			let returnDate = new Date(document.getElementById("returnDate").value);
+			// ✅ Correct Date IDs
+			let issueDate = new Date(document.getElementById("fromIssueDate").value);
+			let returnDate = new Date(document.getElementById("toIssueDate").value);
+
+			// Validate empty selection
+			if (!user.id || !book.id) {
+				message.innerHTML = "Please select user and book.";
+				message.style.color = "red";
+				return false;
+			}
 
 			// Date validation
 			if (issueDate < today) {
@@ -182,6 +214,7 @@
 				message.style.color = "red";
 				return false;
 			}
+
 			if (returnDate <= issueDate) {
 				message.innerHTML = "Return date must be after issue date!";
 				message.style.color = "red";
@@ -191,20 +224,27 @@
 			// Difference in days
 			let diffDays = Math.ceil((returnDate - issueDate) / (1000 * 60 * 60 * 24));
 
-			// Check membership remaining
+			// 1️⃣ Membership expired
+			if (user.membershipRemaining <= 0) {
+				message.innerHTML = "Cannot issue book. User '" + user.name + "' membership is expired.";
+				message.style.color = "red";
+				return false;
+			}
+
+			// 2️⃣ Not enough membership days
 			if (diffDays > user.membershipRemaining) {
 				message.innerHTML = "Cannot issue book. User '" + user.name + "' has only " +
-					(user.membershipDays - user.membershipRemaining) + " day(s) of membership left, but you tried to issue for " +
+					user.membershipRemaining + " day(s) left, but you selected " +
 					diffDays + " day(s).";
 				message.style.color = "red";
 				return false;
 			}
 
 			// Success
-			message.innerHTML = "Book '" + book.name + "' assigned to '" + user.name + "' for " + diffDays + " day(s).";
+			message.innerHTML = "Book '" + book.name + "' assigned successfully.";
 			message.style.color = "green";
 
-			return true; // allow form submit
+			return true;
 		}
 	</script>
 
