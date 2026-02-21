@@ -1,5 +1,7 @@
 package com.library.libraryapp.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ public class LoginController {
 	@PostMapping("/save-user")
 	public String saveUser(User user) {
 
+		user.setMemberShipSate(new Date());
 		User saveUser = userService.saveUser(user);
 
 		return "redirect:/";

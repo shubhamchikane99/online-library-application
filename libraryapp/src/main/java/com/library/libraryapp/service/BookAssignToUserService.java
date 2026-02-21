@@ -1,5 +1,7 @@
 package com.library.libraryapp.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.library.libraryapp.entity.BookAssignToUser;
@@ -18,5 +20,12 @@ public class BookAssignToUserService {
 	public BookAssignToUser saveBookAssignToUser(BookAssignToUser bookAssignToUser) {
 
 		return bookAssignToUserRepository.save(bookAssignToUser);
+	}
+
+	public BookAssignToUser findBookAssignToUserById(String id) {
+
+		Optional<BookAssignToUser> bookAssignToUserOpt = bookAssignToUserRepository.findById(id);
+
+		return bookAssignToUserOpt.get();
 	}
 }

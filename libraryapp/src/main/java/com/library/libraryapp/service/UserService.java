@@ -20,7 +20,7 @@ public class UserService {
 	@Autowired
 	private DTOUserRepository dtoUserRepository;
 
-	public User saveUser(User user) { 
+	public User saveUser(User user) {
 
 		User checkUserIsPresent = userRepository.getUserByEmailId(user.getEmail());
 
@@ -41,5 +41,11 @@ public class UserService {
 		// get all users
 
 		return dtoUserRepository.getAllUsers();
+	}
+
+	public List<User> getAll() {
+		// get all users
+
+		return userRepository.findAll();
 	}
 }

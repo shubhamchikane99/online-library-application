@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.library.libraryapp.entity.DTOBookAssignToUser;
@@ -30,5 +31,35 @@ public interface DTOBookAssignToUserRepository extends JpaRepository<DTOBookAssi
 			+ "        assign.user_id = u.id\r\n"
 			+ "    AND assign.book_id = b.id ", nativeQuery =  true)
 	List<DTOBookAssignToUser> getAssignBookToUsers();
+
+	@Query(value = " SELECT\r\n"
+			+ "    b.name AS book_name,\r\n"
+			+ "    b.author AS book_author_name,\r\n"
+			+ "    '-' AS user_name,\r\n"
+			+ "    assign.* \r\n"
+			+ "FROM\r\n"
+			+ "    book_assign_to_user assign,\r\n"
+			+ "    book b\r\n"
+			+ "WHERE\r\n"
+			+ "   assign.book_id = b.id\r\n"
+			+ "   AND assign.status = 0\r\n"
+			+ "   AND assign.user_id =:userId \r\n"
+			+ "   ORDER BY assign.insert_date_time DESC LIMIT 1 ",nativeQuery =  true)
+	DTOBookAssignToUser getCurrentBook(@Param("userId") String userId);
+
+	@Query(value = " SELECT\r\n"
+			+ "    b.name AS book_name,\r\n"
+			+ "    b.author AS book_author_name,\r\n"
+			+ "    '-' AS user_name,\r\n"
+			+ "    assign.* \r\n"
+			+ "FROM\r\n"
+			+ "    book_assign_to_user assign,\r\n"
+			+ "    book b\r\n"
+			+ "WHERE\r\n"
+			+ "   assign.book_id = b.id\r\n"
+			+ "   AND assign.status = 1\r\n"
+			+ "   AND assign.user_id =:userId \r\n"
+			+ "   ORDER BY assign.insert_date_time  ",nativeQuery =   true)
+	List<DTOBookAssignToUser> getPeviousReadBook(String userId);
 
 }

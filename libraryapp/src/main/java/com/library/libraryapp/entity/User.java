@@ -36,6 +36,9 @@ public class User {
 	@Column(name = "membership")
 	private String membership;
 
+	@Column(name = "member_ship_date")
+	private Date memberShipSate;
+
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "insert_date_time", updatable = false)

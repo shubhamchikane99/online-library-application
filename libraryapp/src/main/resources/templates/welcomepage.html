@@ -77,9 +77,11 @@
 
 		<div class="header-right">
 			<span th:text="'Welcome, ' + ${session.loggedInUser.name}"></span>
-			<a href="/addBook">Add Book</a>
 			<a href="/get-all-users">Users</a>
-			<a href="/logout" class="logout-btn">Logout</a>
+			<a href="/addBook">Add Book</a>
+			<a href="/manage-book">Manage Book</a>
+			<a href="/user-book-details">User Details</a>
+			<a href="/" class="logout-btn">Logout</a>
 		</div>
 	</div>
 

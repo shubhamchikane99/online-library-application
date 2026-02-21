@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>User Book Details</title>
+
+	<style>
+		body {
+			font-family: Arial;
+			background: #f4f6f9;
+			padding: 40px;
+		}
+
+		.container {
+			width: 900px;
+			margin: auto;
+		}
+
+		.card {
+			background: white;
+			padding: 20px;
+			border-radius: 8px;
+			margin-top: 20px;
+			box-shadow: 0px 0px 8px #ccc;
+		}
+
+		h2 {
+			margin-bottom: 10px;
+		}
+
+		select,
+		button {
+			padding: 8px;
+			margin-top: 10px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 15px;
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 10px;
+		}
+
+		th {
+			background: #007bff;
+			color: white;
+		}
+
+		.no-data {
+			color: red;
+			font-weight: bold;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="container">
+
+		<h1>User Book Dashboard</h1>
+
+		<!-- USER DROPDOWN -->
+		<div class="card">
+
+			<form th:action="@{/user-details}" method="get">
+
+				<label><b>Select User :</b></label><br>
+
+				<select name="userId" required>
+					<option value="">-- Select User --</option>
+
+					<option th:each="u : ${users}" th:value="${u.id}" th:text="${u.name}">
+					</option>
+
+				</select>
+
+				<button type="submit">Search</button>
+
+			</form>
+
+		</div>
+
+
+		<!-- CURRENT BOOK -->
+		<div class="card">
+			<h2>Current Book</h2>
+
+			<div th:if="${currentBook != null}">
+				<p>
+					<b>Book :</b>
+					<span th:text="${currentBook.bookName}"></span>
+				</p>
+
+				<p>
+					<b>Issue Date :</b>
+					<span th:text="${currentBook.fromIssueDate}"></span>
+				</p>
+			</div>
+
+			<div th:if="${currentBook == null}" class="no-data">
+				No Book Currently Issued
+			</div>
+
+		</div>
+
+
+		<!-- BOOK HISTORY -->
+		<div class="card">
+			<h2>Previously Read Books</h2>
+
+			<table>
+
+				<thead>
+					<tr>
+						<th>Book Name</th>
+						<th>Issue Date</th>
+						<th>Return Date</th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<tr th:each="b : ${readBooks}">
+						<td th:text="${b.bookName}"></td>
+						<td th:text="${b.fromIssueDate}"></td>
+						<td th:text="${b.returnDate}"></td>
+					</tr>
+
+					<tr th:if="${#lists.isEmpty(readBooks)}">
+						<td colspan="3" class="no-data">
+							No Previously Read Books
+						</td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+
+	</div>
+
+</body>
+
+</html>
