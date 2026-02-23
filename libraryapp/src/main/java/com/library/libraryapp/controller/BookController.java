@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.library.libraryapp.entity.Book;
 import com.library.libraryapp.entity.BookAssignToUser;
+import com.library.libraryapp.entity.BookCategoryReport;
 import com.library.libraryapp.entity.DTOBookAssignToUser;
 import com.library.libraryapp.entity.DTOUser;
 import com.library.libraryapp.entity.User;
+import com.library.libraryapp.repository.BookCategoryReportRepository;
 import com.library.libraryapp.repository.DTOBookAssignToUserRepository;
 import com.library.libraryapp.repository.UserRepository;
 import com.library.libraryapp.service.BookAssignToUserService;
@@ -25,7 +27,7 @@ import com.library.libraryapp.service.UserService;
 @Controller
 public class BookController {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	@Autowired
 	private BookService bookService;
@@ -39,9 +41,12 @@ public class BookController {
 	@Autowired
 	private DTOBookAssignToUserRepository dtoBookAssignToUserRepository;
 
-    BookController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	@Autowired
+	private BookCategoryReportRepository bookCategoryReportRepository;
+
+	BookController(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	@GetMapping("/addBook")
 	public String addBook(Model model) {
@@ -109,7 +114,6 @@ public class BookController {
 
 	@GetMapping("/user-details")
 	public String getUserDetail(@RequestParam String userId, Model model) {
-		
 
 		DTOBookAssignToUser currentBook = dtoBookAssignToUserRepository.getCurrentBook(userId);
 		List<DTOBookAssignToUser> previousReadBook = dtoBookAssignToUserRepository.getPeviousReadBook(userId);
@@ -120,5 +124,15 @@ public class BookController {
 		model.addAttribute("readBooks", previousReadBook);
 
 		return "userdetailpage";
+	}
+
+	@GetMapping("/category-report")
+	public String getCategoryReport(Model model) {
+
+		List<BookCategoryReport> categoryReport = bookCategoryReportRepository.getCategoryReport();
+
+		model.addAttribute("categoryReport", categoryReport);
+
+		return "categoryreportpage";
 	}
 }

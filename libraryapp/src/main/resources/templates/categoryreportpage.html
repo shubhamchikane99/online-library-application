@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Category Report</title>
+
+	<style>
+		body {
+			font-family: Arial;
+			background: #f4f6f9;
+			padding: 40px;
+		}
+
+		.container {
+			width: 900px;
+			margin: auto;
+		}
+
+		.card {
+			background: white;
+			padding: 20px;
+			border-radius: 8px;
+			margin-top: 20px;
+			box-shadow: 0px 0px 8px #ccc;
+		}
+
+		h1,
+		h2 {
+			margin-bottom: 10px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 15px;
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 10px;
+			text-align: center;
+		}
+
+		th {
+			background: #007bff;
+			color: white;
+		}
+
+		tr:hover {
+			background: #f2f2f2;
+		}
+
+		.no-data {
+			color: red;
+			font-weight: bold;
+			text-align: center;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="container">
+
+		<h1>Book Category Dashboard</h1>
+
+		<!-- CATEGORY REPORT CARD -->
+		<div class="card">
+
+			<h2>Most Read Book Categories</h2>
+
+			<table>
+
+				<thead>
+					<tr>
+						<th>No</th>
+						<th>Category</th>
+						<th>Total Books Read</th>
+						<th>Percentage (%)</th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<tr th:each="r, stat : ${categoryReport}">
+						<td th:text="${stat.count}"></td>
+						<td th:text="${r.category}"></td>
+						<td th:text="${r.bookCount}"></td>
+						<td th:text="${r.percentage + ' %'}"></td>
+					</tr>
+
+					<tr th:if="${#lists.isEmpty(categoryReport)}">
+						<td colspan="4" class="no-data">
+							No Category Data Found
+						</td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>
