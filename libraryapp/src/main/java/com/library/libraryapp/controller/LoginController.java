@@ -1,15 +1,19 @@
 package com.library.libraryapp.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.library.libraryapp.entity.Book;
 import com.library.libraryapp.entity.User;
+import com.library.libraryapp.service.BookService;
 import com.library.libraryapp.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +23,9 @@ public class LoginController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private BookService bookService;
 
 	@GetMapping("/")
 	public String helloPage() {
@@ -73,7 +80,7 @@ public class LoginController {
 
 	// Handle guest form submission
 	@PostMapping("/guest-login")
-	public String guestLogin(@RequestParam("name") String name, HttpSession session) {
+	public String guestLogin(@RequestParam("name") String name, HttpSession session, Model model) {
 
 		User guest = new User();
 		guest.setName(name);
@@ -82,8 +89,12 @@ public class LoginController {
 		// Save in session
 		session.setAttribute("currentUser", guest);
 
+		List<Book> book = bookService.getAllBooks();
+
+		model.addAttribute("bookList", book);
+
 		// Redirect to book list page
-		return "redirect:/books";
+		return "booklistpage";
 	}
 
 }
